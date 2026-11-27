@@ -8,7 +8,7 @@ function draw(now) {
   ctx.clearRect(0, 0, paper.width, paper.height);
   for (const system of systems) {
     system.addParticle();
-    system.run(ctx, dt);
+    system.run(ctx, dt, p => p.applyForce(25 * Math.sin(now / 900), 52));
   }
   requestAnimationFrame(draw);
 }
