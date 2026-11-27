@@ -7,7 +7,13 @@ function draw(now) {
   const dt = Math.min((now - previous) / 1000, 1 / 30);
   previous = now;
   ctx.clearRect(0, 0, paper.width, paper.height);
+  ctx.font = '14px Georgia';
+  ctx.fillStyle = '#ab432e';
+  ctx.textAlign = 'left';
+  let row = 0;
   for (const system of systems) {
+    ctx.fillText(['초판', '여백', '재독'][row++], 76, system.origin.y);
+  
     ctx.strokeStyle = '#cec9b9';
     ctx.beginPath();
     ctx.moveTo(75, system.origin.y + 12);
@@ -35,3 +41,12 @@ function touch(event) {
 }
 paper.addEventListener('pointermove', touch);
 paper.addEventListener('pointerdown', touch);
+
+const toolbar = document.querySelector('#tools');
+const hint = document.createElement('p');
+hint.textContent = '문장을 쓸어 보세요. 누른 채 움직이면 행간이 더 벌어집니다.';
+toolbar.append(hint);
+const press = document.createElement('button');
+press.textContent = '가운데 행 밀기';
+press.onclick = () => Object.assign(hand, {x: 350, y: 236, strength: 4800});
+toolbar.append(press);
