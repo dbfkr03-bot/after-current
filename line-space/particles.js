@@ -46,3 +46,41 @@ class ParticleSystem {
     }
   }
 }
+class Sort extends Particle {
+  constructor(x, y, mark, index) {
+    super(x, y);
+    this.homeX = x;
+    this.homeY = y;
+    this.mark = mark;
+    this.index = index;
+    this.vx = this.vy = 0;
+    this.life = 24 + Math.random() * 12;
+  }
+  display(ctx) {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(Math.tanh(this.vy / 130) * 0.28);
+    ctx.font = 'bold 35px serif';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#28352f';
+    ctx.fillText(this.mark, 0, 0);
+    ctx.restore();
+  }
+}
+class Line extends ParticleSystem {
+  constructor(words, y) {
+    super(145, y);
+    this.marks = [...words];
+    this.marks.forEach((_, i) => this.addParticle(i));
+  }
+  addParticle(i) {
+    this.particles.push(new Sort(this.origin.x + i * 42, this.origin.y, this.marks[i], i));
+  }
+  run(ctx, dt, field) {
+    super.run(ctx, dt, field);
+    if (this.particles.length < this.marks.length) {
+      const live = new Set(this.particles.map(p => p.index));
+      this.marks.forEach((_, i) => { if (!live.has(i)) this.addParticle(i); });
+    }
+  }
+}
